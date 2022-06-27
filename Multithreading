@@ -1,0 +1,47 @@
+MULTITHREADING -------
+
+
+Q- Program to write a thread printing document ------------------------
+
+
+class MyTask extends Thread {
+  
+  @Override
+  public void run(){
+         for(int doc=1;doc<=10;doc++){
+            System.out.println("Printing Document"+doc+"- Printer2");    //printer2
+         }
+   }
+}
+
+
+
+public class App{
+ 
+     public static void main(String[] args){
+         System.out.println("Application Started");
+         
+         MyTask task = new MyTask();
+         task.start();
+         
+         for(int doc=1;doc<=10;doc++){
+             System.out.println("Printing Document"+doc+"- Printer1");      //printer1
+         }
+         
+         System.out.println("Application Finished");
+         
+     } 
+}
+
+
+
+Printing Document 1 - Printer 2
+Printing Document 2 - Printer 2
+Printing Document 1 - Printer 1
+Printing Document 2 - Printer 1
+Printing Document 3 - Printer 2
+Printing Document 4 - Printer 1
+Printing Document 5 - Printer 2
+..
+..
+..
