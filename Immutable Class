@@ -1,0 +1,16 @@
+Do You Know Immutable Class in Java? Why String is Immutable?
+
+What Is an Immutable Class in Java?
+
+Immutable class means once the object of the class is created its fields cannot be modified or changed. 
+In Java, all the wrapper classes like Boolean, Short, Integer, Long, Float, Double, Byte, Char, and String classes are immutable classes.
+
+What Are the Advantages of Immutable Classes?
+The following are advantages of immutable classes or objects:
+
+->Object fields (state) cannot be changed or modified.
+->It can be passed to any method without worrying about whether that method changes or modifies any of the object fields.
+->The object’s hash code can easily be cached.
+->These objects are a good choice for keys for Maps.
+->These objects are good for a multi-threaded environment as the object's state won’t change.
+->An immutable object’s state won’t change, so the same object can be used at multiple places and hence saving the memory.
