@@ -14,3 +14,436 @@ The following are advantages of immutable classes or objects:
 ->These objects are a good choice for keys for Maps.
 ->These objects are good for a multi-threaded environment as the object's state won’t change.
 ->An immutable object’s state won’t change, so the same object can be used at multiple places and hence saving the memory.
+
+
+How to Create an Immutable Class in Java?
+
+A simple java POJO class can be easily converted to an Immutable class by following the below steps :
+
+1. Do not write setter functions
+2.Include all argument constructer 
+3.make class as final
+4.Use deep clone for mutable fields in the constructor 
+5.Return deep clone objects of mutable fields of class from getter.
+
+
+I have written two POJO classes Employee and Company. The company is an attribute of the Employee class. 
+We are going to make Employee as Immutable class by using the above 5 steps mentioned. 
+The Company class will remain the same everywhere in this article.
+
+COMPANY CLASS --------- 
+
+class Company {
+    private String companyName;
+    private int companySize;
+
+    public Company(String companyName, int companySize) {
+        this.companyName = companyName;
+        this.companySize = companySize;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public int getCompanySize() {
+        return companySize;
+    }
+
+    public void setCompanySize(int companySize) {
+        this.companySize = companySize;
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "companyName='" + companyName + '\'' +
+                ", companySize=" + companySize +
+                '}';
+    }
+}
+
+
+1.Do Not Write Setters for Class:
+
+By removing or not writing setters for object fields, the programmer has no choice to change the 
+object field values using the setters methods.
+
+
+Employee class :
+
+class Employee {
+    private String name;
+    private int empId;
+    private Company company;
+    
+    /*
+    only getters so that no one can change object fields using
+    setter methods for object fields (Step 1)
+     */
+    public String getName() {
+        return name;
+    }
+
+    public int getEmpId() {
+        return empId;
+    }
+
+    public Company getCompany() {
+       
+        return company;
+    }
+}
+
+
+
+You may have observed that I’ve skipped the setter methods for object fields for the Employee class. 
+so that no one can change the object field values using setter methods.
+
+
+
+2. Include All Argument Constructor:
+By including all arguments constructor in the class we are allowing to initialize the object fields at the time of object creation only.
+
+
+
+Employee class :
+
+class Employee {
+    private String name;
+    private int empId;
+    private Company company;
+
+    /*
+    all argument constructor so that all object fields can be
+    initialized at the time of object creation only. (Step 2)
+     */
+    public Employee(String name, int empId, Company company) {
+        this.name = name;
+        this.empId = empId;
+        this.company = company;
+    }
+
+
+    /*
+    only getters so that no one can change object fields using
+    setter methods for object fields (Step 1)
+     */
+    public String getName() {
+        return name;
+    }
+
+    public int getEmpId() {
+        return empId;
+    }
+
+    public Company getCompany() {
+
+        return company;
+    }
+}
+
+
+3. Make Class As Final:
+By making our Employee class final, this class cannot be extended by any other class, and hence 
+the object of our final class cannot be modified by any other classes as no other classes would be able to extend it.
+
+
+Employee class :
+
+/*
+Here 'Employee' class is immutable class making it final
+so no other class can extend this class and cannot modify
+its mutable field values Eg.('company' in this case)(Step 3)
+ */
+final class Employee {
+    private String name;
+    private int empId;
+    private Company company;
+
+    /*
+    all argument constructor so that all object fields can be
+    initialized at the time of object creation only. (Step 2)
+     */
+    public Employee(String name, int empId, Company company) {
+        this.name = name;
+        this.empId = empId;
+        this.company = company;
+    }
+
+
+    /*
+    only getters so that no one can change object fields using
+    setter methods for object fields (Step 1)
+     */
+    public String getName() {
+        return name;
+    }
+
+    public int getEmpId() {
+        return empId;
+    }
+
+    public Company getCompany() {
+
+        return company;
+    }
+}
+
+
+4. Use Deep Clone for Mutable Fields in the Constructor:
+By using deep cloning for mutable fields which are passed to all argument constructor 
+while creating the object, we are making sure there won’t be any reference
+for cloned fields of the object so that no one can modify this object.
+
+
+Employee class :
+
+/*
+Here 'Employee' class is immutable class making it final
+so no other class can extend this class and cannot modify
+its mutable field values Eg.('company' in this case)(Step 3)
+ */
+final class Employee {
+    private String name;
+    private int empId;
+    private Company company;
+
+    /*
+    all argument constructor so that all object fields can be
+    initialized at the time of object creation only. (Step 2)
+     */
+    public Employee(String name, int empId, Company company) {
+        this.name = name;
+        this.empId = empId;
+        /*
+        If we use 'company' reference to assign the value to 'company'
+        field of 'Employee' class then using the reference which is passed
+        to this constructor , one can change 'companyName' or 'companySize'
+        fields of the reference passed to constructor as 'Company' class is
+        mutable class. (Step 4)
+         */
+        //this.company = company; //do not use this as 'company' can be modified
+        this.company = new Company(company.getCompanyName(),company.getCompanySize());
+        //here new object of 'Company' class is created using value of object passed to constructor
+    }
+
+
+    /*
+    only getters so that no one can change object fields using
+    setter methods for object fields (Step 1)
+     */
+    public String getName() {
+        return name;
+    }
+
+    public int getEmpId() {
+        return empId;
+    }
+
+    public Company getCompany() {
+
+        return company;
+    }
+}
+
+
+If we directly use the ‘company’ reference which is being passed to the constructor to assign the value 
+to the ‘company’ field of ‘Employee’ class then using this reference, one can change ‘companyName’ or ‘companySize’ 
+fields of the reference passed to the constructor as ‘Company’ class is mutable class.
+
+
+5. Return a Deep Cloned Object of Mutable Fields of Class From Getter Methods:
+
+By returning deep cloned object for mutable fields of the Employee class from getter methods, there won’t be a 
+reference to the actual mutable field of the class and hence no one can change or modify the mutable field of the object of the Employee class.
+
+Hence deep clone of ‘company’ reference is created using a new operator and then assigned to the ‘company’ field of ‘Employee’ class.
+
+Employee class :
+
+/*
+Here 'Employee' class is immutable class making it final
+so no other class can extend this class and cannot modify
+its mutable field values Eg.('company' in this case)(Step 3)
+ */
+final class Employee {
+    private String name;
+    private int empId;
+    private Company company;
+
+    /*
+    all argument constructor so that all object fields can be
+    initialized at the time of object creation only. (Step 2)
+     */
+    public Employee(String name, int empId, Company company) {
+        this.name = name;
+        this.empId = empId;
+        /*
+        If we use 'company' reference to assign the value to 'company'
+        field of 'Employee' class then using the reference which is passed
+        to this constructor , one can change 'companyName' or 'companySize'
+        fields of the reference passed to constructor as 'Company' class is
+        mutable class. (Step 4)
+         */
+        //this.company = company; //do not use this as 'company' can be modified
+        this.company = new Company(company.getCompanyName(),company.getCompanySize());
+        //here new object of 'Company' class is created using value of object passed to constructor
+    }
+
+
+    /*
+    only getters so that no one can change object fields using
+    setter methods for object fields (Step 1)
+     */
+    public String getName() {
+        return name;
+    }
+
+    public int getEmpId() {
+        return empId;
+    }
+
+    public Company getCompany() {
+        /*
+        returning clone object of 'company' field of 'Employee' class so no one can
+        modify the fields of 'company' using the reference returned by getCompany().
+        (Step 5)
+         */
+        //return company;//do not use this as using 'company' reference its fields can be modified .
+
+        return new Company(company.getCompanyName(),company.getCompanySize());
+    }
+
+}
+
+
+Finally, we have Employee as an Immutable class whose object state won’t change.
+
+//Company as mutable class , field values can be modified.
+class Company {
+    private String companyName;
+    private int companySize;
+
+    public Company(String companyName, int companySize) {
+        this.companyName = companyName;
+        this.companySize = companySize;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public int getCompanySize() {
+        return companySize;
+    }
+
+    public void setCompanySize(int companySize) {
+        this.companySize = companySize;
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "companyName='" + companyName + '\'' +
+                ", companySize=" + companySize +
+                '}';
+    }
+}
+
+/*
+Here 'Employee' class is immutable class making it final
+so no other class can extend this class and cannot modify
+its mutable field values Eg.('company' in this case)(Step 3)
+ */
+final class Employee {
+    private String name;
+    private int empId;
+    private Company company;
+
+    /*
+    all argument constructor so that all object fields can be
+    initialized at the time of object creation only. (Step 2)
+     */
+    public Employee(String name, int empId, Company company) {
+        this.name = name;
+        this.empId = empId;
+        /*
+        If we use 'company' reference to assign the value to 'company'
+        field of 'Employee' class then using the reference which is passed
+        to this constructor , one can change 'companyName' or 'companySize'
+        fields of the reference passed to constructor as 'Company' class is
+        mutable class. (Step 4)
+         */
+        //this.company = company; //do not use this as 'company' can be modified
+        this.company = new Company(company.getCompanyName(),company.getCompanySize());
+        //here new object of 'Company' class is created using value of object passed to constructor
+    }
+
+    /*
+    only getters so that no one can change object fields using
+    setter methods for object fields (Step 1)
+     */
+    public String getName() {
+        return name;
+    }
+
+    public int getEmpId() {
+        return empId;
+    }
+
+    public Company getCompany() {
+        /*
+        returning clone object of 'company' field of 'Employee' class so no one can
+        modify the fields of 'company' using the reference returned by getCompany().
+        (Step 5)
+         */
+        //return company;//do not use this as using 'company' reference its fields can be modified .
+
+        return new Company(company.getCompanyName(),company.getCompanySize());
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "name='" + name + '\'' +
+                ", empId=" + empId +
+                ", company=" + company +
+                '}';
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        //creating 'Company' object
+        Company company = new Company("Medium",50);
+
+        //creating 'Employee' object
+        Employee employee = new Employee("Ram",1000,company);
+
+        System.out.println("Employee Object is : "+employee);
+
+    }
+}
+
+
+OUTPUT :
+
+Employee Object is : Employee{name=’Ram’, empId=1000, 
+company=Company{companyName=’Medium’, companySize=50}}
+
+
+NOTE : Optionally all the fields of Employee class can be declared as final so that it cannot be modified elsewhere .
+
+
+
