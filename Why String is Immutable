@@ -1,0 +1,37 @@
+Why String is Immutable
+
+The following are the main reasons for string immutability :
+
+1.Use of String Constant Pool:
+The string pool is a group of string literals placed in the heap memory area. Many string variables with the same 
+string literal or content can refer to the same string object from the string pool. By using this concept of string pool, 
+a lot of memory can be easily saved by Java Virtual Machine. The below diagram explains the concept of the string pool.
+
+
+2. Security :
+Strings are generally used in Java applications to store sensitive data like userName, password, etc. 
+If strings were mutable then there would have been a chance that these strings like userName or password could be tempered/changed by some untrustworthy user.
+
+3. Thread-Safety :
+As the string objects are immutable, hence if they are accessed by multiple threads they won’t be changed and hence making it thread safer. 
+Also, the same string object can be used by multiple threads.
+
+4. Cacheable HashCode :
+Strings are the most widely used objects in any java application. They are used in HashMap, HashTable, HashSet, etc. . 
+Also note that the overridden hashCode() method of String class is quite frequently called for bucketing.
+
+As strings are immutable and hence, they won’t change, and hence when first-time hashCode() is called the hashcode of the 
+string object is cached and later on, for frequent hashCode() method calls the same value is returned.
+
+If we would have used the mutable objects with Collections like HashMap, HashSet, or HashTable, 
+there could have been different hashcodes, one when object contents are not modified and the other when object contents are modified. 
+Hence mutable objects should not be used as keys in Maps, if they are used in Maps, then we might lose the value associated with the keys in Map.
+
+5. Improved Performance :
+Generally, performance is directly linked with memory usages. As Strings are stored in a string pool 
+and for multiple string variables having the same string contents there is only one instance stored in the string pool, 
+which is already explained in above point 1. So, the string pool saves a lot of heap memory of Java Virtual Memory and hence 
+performance of the application improves automatically.
+
+
+
